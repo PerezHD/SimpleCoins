@@ -25,7 +25,7 @@ public class SimpleCoinsAPI {
 	
 	
 	//Spieler Coins abziehen
-	public static void subtractCoins(Player p, Integer amount){
+	public static void substractCoins(Player p, Integer amount){
 		SimpleCoins.cache.put(p.getUniqueId().toString(), SimpleCoins.cache.get(p.getUniqueId().toString()) - amount); //Coins in Cache abziehen
 	}
 		

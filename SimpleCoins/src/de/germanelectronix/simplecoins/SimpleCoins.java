@@ -6,36 +6,39 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import de.germanelectronix.simplecoins.sql.MySQL;
+import de.germanelectronix.simplecoins.cmd.AddCoins;
+import de.germanelectronix.simplecoins.cmd.GetCoins;
+import de.germanelectronix.simplecoins.cmd.SetCoins;
+import de.germanelectronix.simplecoins.cmd.TakeCoins;
 
 
 public class SimpleCoins extends JavaPlugin implements Listener {
 	
-	// The instance of our plugin
+	//Main Class Instance
 	private SimpleCoins plugin;
 	
 	//MySQL Class Instance
-	public static MySQL sql = new MySQL();
+	protected static MySQL sql = new MySQL();
 	
 	//Database Cache
-	public static HashMap<String, Integer> cache = new HashMap<String, Integer>();
+	protected static HashMap<String, Integer> cache = new HashMap<String, Integer>();
 	
 	//Database Credentials
-	public static String host;
-	public static String user;
-	public static String password;
-	public static String database;
+	protected static String host;
+	protected static String user;
+	protected static String password;
+	protected static String database;
 
 	
 	
-	//Plugin aktiviert
+	//Plugin activated
 	public void onEnable() {
 		plugin = this;
 		getServer().getPluginManager().registerEvents(this, this);
 		this.registerEvents();
 		this.loadConfig();
 		
-		//Async: Verbindung herstellen und Tabellen erstellen, falls nicht vorhanden
+		//Async: Connect and create tables if not existing
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -47,19 +50,23 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 	}
 	
 	
-	//Events registrieren
+	//Register Events
 	private void registerEvents(){
 		getServer().getPluginManager().registerEvents(new PlayerJoin(plugin), this);
 		getServer().getPluginManager().registerEvents(new PlayerLeave(plugin), this);
 	}
 	
 	
-	//Config laden
+	//Load config
 	private void loadConfig(){
 		this.getConfig().addDefault("MySQL.Host", "localhost");
 		this.getConfig().addDefault("MySQL.Username", "root");
 		this.getConfig().addDefault("MySQL.Password", "password");
 		this.getConfig().addDefault("MySQL.Database", "simple_coins");
+		this.getConfig().addDefault("Commands.Enabled.Coins", true);
+		this.getConfig().addDefault("Commands.Enabled.SetCoins", true);
+		this.getConfig().addDefault("Commands.Enabled.AddCoins", true);
+		this.getConfig().addDefault("Commands.Enabled.TakeCoins", true);
 		this.getConfig().options().copyDefaults(true);
 		this.saveConfig();
 		
@@ -67,6 +74,24 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 		user = this.getConfig().getString("MySQL.Username");
 		password = this.getConfig().getString("MySQL.Password");
 		database = this.getConfig().getString("MySQL.Database");
+		
+		//Register enabled commands
+		if(this.getConfig().getBoolean("Commands.Enabled.Coins")){
+			this.getCommand("coins").setExecutor(new GetCoins(this));
+		}
+		
+		if(this.getConfig().getBoolean("Commands.Enabled.SetCoins")){
+			this.getCommand("setcoins").setExecutor(new SetCoins(this));
+		}
+		
+		if(this.getConfig().getBoolean("Commands.Enabled.AddCoins")){
+			this.getCommand("addcoins").setExecutor(new AddCoins(this));
+		}
+		
+		if(this.getConfig().getBoolean("Commands.Enabled.TakeCoins")){
+			this.getCommand("takecoins").setExecutor(new TakeCoins(this));
+		}
+		
 	}
 	
 }

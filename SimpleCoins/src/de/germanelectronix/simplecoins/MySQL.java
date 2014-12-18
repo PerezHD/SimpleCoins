@@ -1,4 +1,4 @@
-package de.germanelectronix.simplecoins.sql;
+package de.germanelectronix.simplecoins;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,8 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.bukkit.entity.Player;
-
-import de.germanelectronix.simplecoins.SimpleCoins;
 
 public class MySQL {
 
