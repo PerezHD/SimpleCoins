@@ -17,7 +17,7 @@ public class MySQL {
 	// Open the MySQL Connection
 	public synchronized void openConnection() {
 		try {
-			connection = DriverManager.getConnection("jdbc:mysql://" + SimpleCoins.host + ":3306/" + SimpleCoins.database, SimpleCoins.user, SimpleCoins.password);
+			connection = DriverManager.getConnection("jdbc:mysql://" + SimpleCoins.host + ":" + 3306 + "/" + SimpleCoins.database + "?user=" + SimpleCoins.user + "&password=" + SimpleCoins.password + "&autoReconnect=true");
 			System.out.println("[SC-API] Successfully connected to MySQL Database!");
 		} catch (SQLException e) {
 			e.printStackTrace();

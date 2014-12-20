@@ -6,25 +6,25 @@ import org.bukkit.entity.Player;
 public class SimpleCoinsAPI {
 	
 	
-	//Spieler Coins setzen
+	//Set player coins
 	public static void setCoins(Player p, Integer value){
 		SimpleCoins.cache.put(p.getUniqueId().toString(), value); //Coins im Cache setzen
 	}
 	
 	
-	//Spieler Coins auslesen
+	//Get player coins
 	public static Integer getCoins(Player p){
 		return SimpleCoins.cache.get(p.getUniqueId().toString()); //Coins aus Cache auslesen und returnen
 	}
 	
 	
-	//Spieler Coins hinzufügen
+	//Add player coins
 	public static void addCoins(Player p, Integer amount){
 		SimpleCoins.cache.put(p.getUniqueId().toString(), SimpleCoins.cache.get(p.getUniqueId().toString()) + amount); //Coins in Cache hinzufügen
 	}
 	
 	
-	//Spieler Coins abziehen
+	//Substract player coins
 	public static void substractCoins(Player p, Integer amount){
 		SimpleCoins.cache.put(p.getUniqueId().toString(), SimpleCoins.cache.get(p.getUniqueId().toString()) - amount); //Coins in Cache abziehen
 	}

@@ -2,6 +2,8 @@ package de.germanelectronix.simplecoins;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -44,13 +46,25 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 			public void run() {
 				sql.openConnection();
 				sql.createTables();
+				startBackupLoop();
 			}
-		}.runTaskAsynchronously(this);
-		
+		}.runTaskAsynchronously(this);	
 	}
 	
 	
-	//Register Events
+	//Plugin deactivated
+	public void onDisable(){
+		
+		//Upload cache to database
+		if(Bukkit.getOfflinePlayers() != null && cache != null){
+			for(final Player p : Bukkit.getOnlinePlayers()){
+				sql.setPlayerCoins(p, cache.get(p.getUniqueId().toString()));
+			}
+		}
+	}
+	
+	
+	//Register events
 	private void registerEvents(){
 		getServer().getPluginManager().registerEvents(new PlayerJoin(plugin), this);
 		getServer().getPluginManager().registerEvents(new PlayerLeave(plugin), this);
@@ -92,6 +106,20 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 			this.getCommand("takecoins").setExecutor(new TakeCoins(this));
 		}
 		
+	}
+	
+	
+	//LOOP: Upload cache to database every 5 minutes
+	private void startBackupLoop(){
+		if(Bukkit.getOfflinePlayers() != null && cache != null){
+			for(final Player p : Bukkit.getOnlinePlayers()){
+				this.getServer().getScheduler().scheduleAsyncRepeatingTask(this, new Runnable(){
+					public void run() {
+						sql.setPlayerCoins(p, cache.get(p.getUniqueId().toString()));
+					}
+				}, 200L, 6000L);
+			}
+		}
 	}
 	
 }
