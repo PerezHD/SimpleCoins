@@ -1,6 +1,6 @@
 name: SimpleCoinsAPI
 author: GermanElectronix
-version: 1.2.2
+version: 1.2.3
 
 main: de.germanelectronix.simplecoins.SimpleCoins
 

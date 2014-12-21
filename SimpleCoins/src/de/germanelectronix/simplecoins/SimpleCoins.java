@@ -68,7 +68,7 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 	public void onDisable(){
 		
 		//Upload cache to database
-		if(Bukkit.getOnlinePlayers() != null && cache != null){
+		if(cache != null){
 			for(final Player p : Bukkit.getOnlinePlayers()){
 				sql.setPlayerCoins(p, cache.get(p.getUniqueId().toString()));
 			}
