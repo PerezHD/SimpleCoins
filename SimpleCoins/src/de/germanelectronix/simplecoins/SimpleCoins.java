@@ -1,5 +1,6 @@
 package de.germanelectronix.simplecoins;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 	
 	//Database Credentials
 	protected static String host;
+	protected static Integer port;
 	protected static String user;
 	protected static String password;
 	protected static String database;
@@ -48,7 +50,17 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 				sql.createTables();
 				startBackupLoop();
 			}
-		}.runTaskAsynchronously(this);	
+		}.runTaskAsynchronously(this);
+		
+		
+		//Metrics stuff
+		try {
+	        Metrics metrics = new Metrics(this);
+	        metrics.start();
+	    } catch (IOException e) {
+	    	//Metrics error
+	    }
+		
 	}
 	
 	
@@ -74,6 +86,7 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 	//Load config
 	private void loadConfig(){
 		this.getConfig().addDefault("MySQL.Host", "localhost");
+		this.getConfig().addDefault("MySQL.Port", 3306);
 		this.getConfig().addDefault("MySQL.Username", "root");
 		this.getConfig().addDefault("MySQL.Password", "password");
 		this.getConfig().addDefault("MySQL.Database", "simple_coins");
@@ -85,6 +98,7 @@ public class SimpleCoins extends JavaPlugin implements Listener {
 		this.saveConfig();
 		
 		host = this.getConfig().getString("MySQL.Host");
+		port = this.getConfig().getInt("MySQL.Port");
 		user = this.getConfig().getString("MySQL.Username");
 		password = this.getConfig().getString("MySQL.Password");
 		database = this.getConfig().getString("MySQL.Database");
